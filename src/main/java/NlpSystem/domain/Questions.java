@@ -2,7 +2,11 @@ package NlpSystem.domain;
 
 
 
+import com.monitorjbl.xlsx.StreamingReader;
 import dao.JDBCDAO;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +33,7 @@ public class Questions {
         return questionAndAnswer.get(key);
     }
 
-   /* public void InitByFile(String path)throws  Exception{
+    public void InitByFile(String path)throws  Exception{
         long time = System.currentTimeMillis();
 
         System.out.println("读取excel");
@@ -44,14 +48,14 @@ public class Questions {
 
                 String ques = row.getCell(0).getStringCellValue();
                 String answers = row.getCell(1).getStringCellValue();
-
+                ques = ques.replace(" ","");
                 questions.add(ques);
                 questionAndAnswer.put(ques,answers);
             }
         }
         System.out.println("读取完成");
-        System.out.println("读取数据文件 耗时：" + (System.currentTimeMillis() - time) + "ms");
-    }*/
+        System.out.println("读取问题数据库 耗时：" + (System.currentTimeMillis() - time) + "ms");
+    }
 
     public void InitByDataBase(){
         /*TODO 这里写数据库接口

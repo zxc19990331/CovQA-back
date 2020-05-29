@@ -9,6 +9,8 @@ import java.util.Vector;
 public class Corpus {
     private Vector<Vector<String>> Dirc = new Vector<Vector<String>>();
 
+    private Vector<Vector<WordCode>> DircCode = new Vector<Vector<WordCode>>();
+
     public void Init(Vector<Vector<String>> Words){
         for(Vector<String> OneLine:Words){
             for(int i = 0;i<OneLine.size();i++){
@@ -20,7 +22,15 @@ public class Corpus {
         }
     }
 
-    public void Show(){
+    public Vector<Vector<WordCode>> getDircCode() {
+        return DircCode;
+    }
+
+    public void setDircCode(Vector<Vector<WordCode>> dircCode) {
+        DircCode = dircCode;
+    }
+
+    public void ShowDirc(){
         System.out.println("-------------语料库------------");
         int ctrl = 1;
         for(Vector<String> Line:Dirc){
@@ -31,6 +41,23 @@ public class Corpus {
         }
         System.out.println(" ");
     }
+
+    public void ShowDircCode(){
+        System.out.println("-------------语料库编码------------");
+        int ctrl = 0;
+        for(int i =0;i<DircCode.size();i++){
+            for(int j = 0;j<DircCode.get(i).size();j++){
+                if(DircCode.get(i).get(j).toString().equals("Zz0Z0@")){
+                    System.out.print(Dirc.get(i).get(j) + " ");
+                    ctrl++;
+                }else{
+                    System.out.print(DircCode.get(i).get(j).toString() + " ");
+                }
+            }
+            System.out.print("\n");
+        }
+        System.out.println("Zz总共:"+ctrl+"个");
+    }//这个Show应该在编码完成后
 
     public Vector<Vector<String>> getDirc() {
         return Dirc;

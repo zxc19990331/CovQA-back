@@ -11,7 +11,7 @@ public class Segment {
       private Set<String> segDict = new HashSet<String>();
 
     public void Init()throws  Exception{
-        String dicPath = "E:\\IDEA_Space\\Cov19\\CovQA-back\\src\\main\\resources\\300.txt";//TODO 资源： 300k行的词典
+        String dicPath = this.getClass().getClassLoader().getResource("300.txt").getPath();//TODO 资源： 300k行的词典
         String line = null;
         long time = System.currentTimeMillis();
         BufferedReader br;
@@ -35,7 +35,7 @@ public class Segment {
      * phrase 待分词句子
      * */
     private Vector<String> FMM2(String  phrase){
-        int maxlen = 4;
+        int maxlen = 6;
         Vector<String> fmm_list = new Vector<String>();
         int len_phrase = phrase.length();
         int i=0,j=0;
@@ -66,7 +66,7 @@ public class Segment {
      * 后向算法分词
      * */
     private Vector<String> BMM2( String  phrase){
-        int maxlen = 4;
+        int maxlen = 6;
         Vector<String> bmm_list = new Vector<String>();
         int len_phrase = phrase.length();
         int i=len_phrase,j=0;

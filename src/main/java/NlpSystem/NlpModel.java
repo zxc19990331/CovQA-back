@@ -1,12 +1,12 @@
 package NlpSystem;
 
 import FeatureExtractionUtils.Learn;
-import FeatureExtractionUtils.Word2VEC;
 import NlpSystem.domain.Corpus;
-import NlpSystem.domain.QueryVector;
 import NlpSystem.domain.Questions;
+import NlpSystem.domain.WordCode;
 import PreprocessingUtils.Segment;
 import PreprocessingUtils.StopWord;
+import PreprocessingUtils.SynonymCode;
 
 import java.io.File;
 import java.util.Vector;
@@ -20,13 +20,14 @@ public class NlpModel {
     //NLP工具
     private Segment segment = new Segment();//分词器
     private StopWord stopWord = new StopWord();//去停词器
+    private SynonymCode synonymCode = new SynonymCode();//同义词编码器
+
 
     private void WordPerprocessingPart()throws Exception{
         Vector<Vector<String>> InitWords = segment.BilateralSegment(questions.getQuestions());//问题库获得问题后分词器分词
         Vector<Vector<String>> UsefulWords = stopWord.RemoveStopWords(InitWords);//分词器结果去停词
         corpus.Init(UsefulWords);//去停词后的语料建立语料库
-        ShowCorpus();
-        corpus.WriteToFile(this.getClass().getClassLoader().getResource("corpus.txt").getPath());
+       // corpus.WriteToFile(this.getClass().getClassLoader().getResource("corpus.txt").getPath());
     }
 
     private void FeatureExtractionPart() throws Exception{
@@ -37,17 +38,18 @@ public class NlpModel {
         learn.saveModel(new File(this.getClass().getClassLoader().getResource("resource.bin").getPath()));//TODO 资源：结果bin文件
     }
 
+    private void WordSynonymCodePart(){
+        corpus = synonymCode.GenerateDircCode(corpus);
+    }
+
     public void Init()throws Exception{
         segment.Init();//读取字典
         stopWord.Init();//读取停用词典
-
-//        questions.Init();;//初始化问题，Init中内置了7句问题
-
+        synonymCode.init();//读取同义词词典
+//      questions.Init();;//初始化问题，Init中内置了7句问题
         //TODO question需要从数据库中读取问题（接口未实现）
         // questions.InitByDataBase();
-        //questions.InitByFile("src\\main\\resources\\quesAnsw.xlsx");
-        //********************
-        questions.InitByDataBase();
+        questions.InitByFile(this.getClass().getClassLoader().getResource("qa2.xlsx").getPath());
 
     }//初始化NLP模块：分词器+去停词器+问题库
 
@@ -55,7 +57,8 @@ public class NlpModel {
         questions.Show();
     }//展示问题内容
     public void ShowCorpus(){
-        corpus.Show();
+        corpus.ShowDirc();
+        corpus.ShowDircCode();
     }//展示语料库
 
 
@@ -63,36 +66,49 @@ public class NlpModel {
     public String getAnswers(String Q)throws Exception{
         questions.addQuestion(Q);//问题融入问题库
         WordPerprocessingPart();//初始化问题+分词+去停词+构件语料库
-        FeatureExtractionPart();//语料库向量化
 
-        Word2VEC word2VEC = new Word2VEC();
-        word2VEC.loadJavaModel(this.getClass().getClassLoader().getResource("resource.bin").getPath());//TODO 资源：调用resources中resource.bin
+        long time = System.currentTimeMillis();
+        WordSynonymCodePart();//语料库编码
+        System.out.println("语料库编码化 耗时：" + (System.currentTimeMillis() - time) + "ms");
 
-        Vector<String> ques = corpus.getDirc().get(corpus.getDirc().size()-1);
-        QueryVector AimVector = new QueryVector();
-        AimVector.Calc(word2VEC,ques);
-        System.out.print(ques);
-        System.out.println(AimVector.getVector());
 
-        double max = -1;
-        int iter = -1;
-        for(int i = 0;i<corpus.getDirc().size()-1;i++){
-            QueryVector vector = new QueryVector();
-            vector.Calc(word2VEC,corpus.getDirc().get(i));
-            double res = AimVector.COS(vector);
-            if(res>max){
-                max = res;
-                iter = i;
+        String Answer = FindClosestQuestion();
+        return Answer;
+
+    }
+
+    private String FindClosestQuestion(){
+        Vector<WordCode> Question = corpus.getDircCode().get(corpus.getDirc().size()-1);
+        for(String s:corpus.getDirc().get(corpus.getDirc().size()-1)){
+            System.out.print(s + " ");
+        }
+        for(WordCode s:corpus.getDircCode().get(corpus.getDirc().size()-1)){
+            System.out.print(s.toString() + " ");
+        }
+        String Answer = null;
+
+        double MaxScore = -1;
+        int MaxIter = -1;
+        for(int i = 0;i<corpus.getDircCode().size()-1;i++){
+            System.out.print("正在计算相似度" + i +"：" + corpus.getDirc().get(i));
+            if(i == 32){
+              //  System.out.print("nb!");
+            }
+            double score = synonymCode.CalcDistance(Question,corpus.getDircCode().get(i));
+            System.out.println("***" + score);
+            if(score > MaxScore){
+                MaxIter = i;
+                MaxScore = score;
             }
         }
-        System.out.println("提问："+questions.getQuestions().get(questions.getQuestions().size()-1));
-        if(max > 0.3){
-            System.out.println("相似："+questions.getQuestions().get(iter));
-            return questions.getAnswer(questions.getQuestions().get(iter));
-        }else{
-            System.out.println("无相似度高于0.3的问题");
-            return "抱歉，我不知道。";
-        }
 
+        if(MaxScore > 1.0){
+            String ClosestQues = questions.getQuestions().get(MaxIter);
+            System.out.println("最相近问题：" + ClosestQues);
+            Answer = questions.getAnswer(ClosestQues);
+        }else{
+            System.out.println("匹配不到相似问题");
+        }
+        return Answer;
     }
 }

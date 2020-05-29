@@ -11,9 +11,8 @@ public class MainServer {
         String answer="";
         try{
             nlpModel.Init();
-            nlpModel.ShowQuestions();
             answer=nlpModel.getAnswers(question);
-        }catch (Exception e){System.out.println("异常提醒:"+e);}
+        }catch (Exception e){e.printStackTrace();}
         if(answer.isEmpty())
             return DataResult.success("success","我什么也不知道");
         else
