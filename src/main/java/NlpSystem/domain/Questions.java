@@ -2,11 +2,11 @@ package NlpSystem.domain;
 
 
 
-import com.monitorjbl.xlsx.StreamingReader;
+//import com.monitorjbl.xlsx.StreamingReader;
 import dao.JDBCDAO;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+//import org.apache.poi.ss.usermodel.Row;
+//import org.apache.poi.ss.usermodel.Sheet;
+//import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +33,7 @@ public class Questions {
         return questionAndAnswer.get(key);
     }
 
-    public void InitByFile(String path)throws  Exception{
+    /*public void InitByFile(String path)throws  Exception{
         long time = System.currentTimeMillis();
 
         System.out.println("读取excel");
@@ -55,16 +55,15 @@ public class Questions {
         }
         System.out.println("读取完成");
         System.out.println("读取问题数据库 耗时：" + (System.currentTimeMillis() - time) + "ms");
-    }
+    }*/
 
     public void InitByDataBase(){
         /*TODO 这里写数据库接口
         *  问题数据结构是Vector<String>
         *  问题-答案数据结构是Map<"question","answer">
         */
-        JDBCDAO jdbcdao=new JDBCDAO();
-        questions=jdbcdao.getQuestionVectorAll();
-        questionAndAnswer=jdbcdao.getQuestionAndAnswer();
+        questions=JDBCDAO.getQuestionVectorAll();
+        questionAndAnswer=JDBCDAO.getQuestionAndAnswer();
     }
 
     public Vector<String> getQuestions() {

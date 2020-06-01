@@ -46,10 +46,9 @@ public class NlpModel {
         segment.Init();//读取字典
         stopWord.Init();//读取停用词典
         synonymCode.init();//读取同义词词典
-//      questions.Init();;//初始化问题，Init中内置了7句问题
-        //TODO question需要从数据库中读取问题（接口未实现）
-        // questions.InitByDataBase();
-        questions.InitByFile(this.getClass().getClassLoader().getResource("qa2.xlsx").getPath());
+      //questions.Init();;//初始化问题，Init中内置了7句问题
+        questions.InitByDataBase();
+        //questions.InitByFile(this.getClass().getClassLoader().getResource("qa2.xlsx").getPath());
 
     }//初始化NLP模块：分词器+去停词器+问题库
 

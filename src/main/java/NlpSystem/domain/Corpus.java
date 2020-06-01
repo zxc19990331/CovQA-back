@@ -1,5 +1,7 @@
 package NlpSystem.domain;
 
+import dao.JDBCDAO;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -84,7 +86,16 @@ public class Corpus {
             write.write(stringBuilder.toString() + "\r\n");
             write.flush();
         }
-
         write.close();
+    }
+    public void addCodeToDB(Vector<Vector<WordCode>> dircCode){
+        for(int i=0;i<dircCode.size();i++){
+            String code="";
+            for(int j=0;j<dircCode.get(i).size();j++){
+                String temp=dircCode.get(i).get(j).toString()+" ";
+                code+=temp;
+            }
+            JDBCDAO.addCode(code);
+        }
     }
 }

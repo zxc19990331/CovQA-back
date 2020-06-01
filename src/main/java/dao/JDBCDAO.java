@@ -11,13 +11,13 @@ import java.util.Vector;
  */
 //连接Mysql8.0.19
 public class JDBCDAO {
-    private String JDBC_DRIVER="com.mysql.cj.jdbc.Driver";
-    private String URL="jdbc:mysql://localhost:3306/qa?&useSSL=false&serverTimezone=UTC";
-    private String User="root";
-    private String PassWord="LOVEYOU0812";
-    Connection connection;
-    Statement statement;
-    public JDBCDAO() {
+    private static String JDBC_DRIVER="com.mysql.cj.jdbc.Driver";
+    private static String URL="jdbc:mysql://localhost:3306/qa?&useSSL=false&serverTimezone=UTC";
+    private static String User="root";
+    private static String PassWord="LOVEYOU0812";
+    static Connection connection;
+    static Statement statement;
+    static{
         try{
             Class.forName(JDBC_DRIVER);
         }catch (Exception e){System.out.println("异常提醒:"+e);}
@@ -29,7 +29,7 @@ public class JDBCDAO {
         }catch (Exception e){System.out.println("异常提醒:"+e);}
     }
     //questionDeal
-    public Vector<String> getQuestionVectorAll() {
+    public static Vector<String> getQuestionVectorAll() {
         Vector<String> questionVecor=new Vector<>();
         String querySql="SELECT * FROM qa";
         try{
@@ -40,16 +40,16 @@ public class JDBCDAO {
             temp=temp.replace(" ","");
             System.out.print(temp);
             questionVecor.add(temp);
-        }}catch (Exception e){System.out.println("异常提醒:"+e);}
+        }}catch (Exception e){System.out.println("查询异常1:"+e);}
         return questionVecor;
     }
-    public void addNewQuestion(String question){
+    public static void addNewQuestion(String question){
         try{
         String insertSql="INSERT INTO question(question) VALUES(\""+question+"\")";
-        statement.execute(insertSql);}catch (Exception e){System.out.println("异常提醒:"+e);}
+        statement.execute(insertSql);}catch (Exception e){System.out.println("更新异常1:"+e);}
     }
     //anwserDeal
-    public Map<String ,String> getQuestionAndAnswer(){
+    public static Map<String ,String> getQuestionAndAnswer(){
         Map<String,String> questionAndAnswer=new HashMap<>();
         String querySql="SELECT * FROM qa";
         try{
@@ -57,7 +57,21 @@ public class JDBCDAO {
             while(resultSet.next()){
                 questionAndAnswer.put(resultSet.getString("question"),resultSet.getString("answer"));
             }
-        }catch (Exception e){System.out.println("异常提醒:"+e);}
+        }catch (Exception e){System.out.println("查询异常2:"+e);}
         return questionAndAnswer;
+    }
+    public static boolean addQuestionAndAnswer(String question,String answer){
+        String insertSql="INSERT INTO qa VALUES(\""+question+"\",\""+answer+"\")";
+        try{
+            statement.executeUpdate(insertSql);
+            return true;
+        }catch (Exception e){System.out.print("更新异常2："+e);}
+        return false;
+    }
+    public static void addCode(String code){
+        String insertSql="INSERT qa VALUES(\""+code+"\")";
+        try{
+            statement.executeUpdate(insertSql);
+        }catch (Exception e){System.out.print("更新异常3："+e);}
     }
 }
