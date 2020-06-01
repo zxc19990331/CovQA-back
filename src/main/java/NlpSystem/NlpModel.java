@@ -22,6 +22,8 @@ public class NlpModel {
     private StopWord stopWord = new StopWord();//去停词器
     private SynonymCode synonymCode = new SynonymCode();//同义词编码器
 
+    //判断是否已经编码
+    private boolean isVerb=false;
 
     private void WordPerprocessingPart()throws Exception{
         Vector<Vector<String>> InitWords = segment.BilateralSegment(questions.getQuestions());//问题库获得问题后分词器分词
@@ -40,6 +42,7 @@ public class NlpModel {
 
     private void WordSynonymCodePart(){
         corpus = synonymCode.GenerateDircCode(corpus);
+        isVerb=true;
     }
 
     public void Init()throws Exception{
@@ -67,11 +70,19 @@ public class NlpModel {
 //        WordPerprocessingPart();//初始化问题+分词+去停词+构件语料库
 //
 //        long time = System.currentTimeMillis();
+//        if(!isVerb){
 //        WordSynonymCodePart();//语料库编码
+//        corpus.addCodeToDB(corpus.getDircCode());
+//        }
+//        else {
+//
+//        }
 //        System.out.println("语料库编码化 耗时：" + (System.currentTimeMillis() - time) + "ms");
-
-        questions.InitByDataBase();
+//
+//        questions.InitByDataBase();
         //corpus.InitByDataBase();
+        corpus.InitByDB();
+        questions.InitByDataBase();
         String Answer = FindClosestQuestion();
         return Answer;
 

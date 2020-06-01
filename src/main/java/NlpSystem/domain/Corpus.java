@@ -24,6 +24,26 @@ public class Corpus {
         }
     }
 
+    public void InitByDB(){
+        //从数据库中一行行读出：【Bj3A1=,新型冠状病毒】【 Hi8C3=,肆虐】【 Di1A1=,全球】
+        Vector<String>code=JDBCDAO.getCode();
+        for(int i=0;i<code.size();i++){
+            String temp=code.get(i);
+            String []arr=temp.split("\\s+");
+            Vector<WordCode> wordCodes=new Vector<>();
+            Vector<String>question=new Vector<>();
+            for(String ss:arr){
+                String []arr2=ss.split(",");
+                WordCode wordCode=new WordCode(arr2[0]);
+                wordCode.setInitWord(arr2[0]);
+                wordCodes.add(wordCode);
+                question.add(arr2[1]);
+            }
+            Dirc.add(question);
+            DircCode.add(wordCodes);
+        }
+    }
+
     public Vector<Vector<WordCode>> getDircCode() {
         return DircCode;
     }
@@ -95,7 +115,7 @@ public class Corpus {
                 String temp=dircCode.get(i).get(j).toString()+" ";
                 code+=temp;
             }
-            JDBCDAO.addCode(code);
+            JDBCDAO.addCode(code,i);
         }
     }
 }

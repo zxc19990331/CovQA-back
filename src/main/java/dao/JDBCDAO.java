@@ -1,5 +1,9 @@
 package dao;
 
+import NlpSystem.domain.Corpus;
+import NlpSystem.domain.WordCode;
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +32,7 @@ public class JDBCDAO {
         statement=connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
         }catch (Exception e){System.out.println("异常提醒:"+e);}
     }
-    //questionDeal
+    //获取所有问题
     public static Vector<String> getQuestionVectorAll() {
         Vector<String> questionVecor=new Vector<>();
         String querySql="SELECT * FROM qa";
@@ -36,19 +40,14 @@ public class JDBCDAO {
         ResultSet resultSet=statement.executeQuery(querySql);
         while(resultSet.next()){
             String temp=resultSet.getString("question");
-            System.out.print(temp);
+            //System.out.print(temp);
             temp=temp.replace(" ","");
-            System.out.print(temp);
+            //System.out.print(temp);
             questionVecor.add(temp);
         }}catch (Exception e){System.out.println("查询异常1:"+e);}
         return questionVecor;
     }
-    public static void addNewQuestion(String question){
-        try{
-        String insertSql="INSERT INTO question(question) VALUES(\""+question+"\")";
-        statement.execute(insertSql);}catch (Exception e){System.out.println("更新异常1:"+e);}
-    }
-    //anwserDeal
+    //获取问题和答案
     public static Map<String ,String> getQuestionAndAnswer(){
         Map<String,String> questionAndAnswer=new HashMap<>();
         String querySql="SELECT * FROM qa";
@@ -60,18 +59,32 @@ public class JDBCDAO {
         }catch (Exception e){System.out.println("查询异常2:"+e);}
         return questionAndAnswer;
     }
+    //写入问题和答案
     public static boolean addQuestionAndAnswer(String question,String answer){
         String insertSql="INSERT INTO qa VALUES(\""+question+"\",\""+answer+"\")";
         try{
             statement.executeUpdate(insertSql);
             return true;
-        }catch (Exception e){System.out.print("更新异常2："+e);}
+        }catch (Exception e){System.out.print("更新异常1："+e);}
         return false;
     }
-    public static void addCode(String code){
-        String insertSql="INSERT qa VALUES(\""+code+"\")";
+    //编码写入数据库
+    public static void addCode(String code,int index){
+        String updateSql="UPDATE qa SET code=\""+code+"\" WHERE id="+index;
         try{
-            statement.executeUpdate(insertSql);
-        }catch (Exception e){System.out.print("更新异常3："+e);}
+            statement.executeUpdate(updateSql);
+        }catch (Exception e){System.out.print("更新异常2："+e);}
+    }
+    //获取编码
+    public static Vector<String>getCode(){
+        Vector<String> code=new Vector<>();
+        String sql="SELECT code FROM qa";
+        try{
+            ResultSet rs=statement.executeQuery(sql);
+            while(rs.next()){
+                code.add(rs.getString("code"));
+            }
+        }catch (Exception e){System.out.print("查询异常3："+e);}
+        return code;
     }
 }
