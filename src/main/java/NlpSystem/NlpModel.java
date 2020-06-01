@@ -63,18 +63,29 @@ public class NlpModel {
 
 
     public String getAnswers(String Q)throws Exception{
-        questions.addQuestion(Q);//问题融入问题库
-        WordPerprocessingPart();//初始化问题+分词+去停词+构件语料库
+//        questions.addQuestion(Q);//问题融入问题库
+//        WordPerprocessingPart();//初始化问题+分词+去停词+构件语料库
+//
+//        long time = System.currentTimeMillis();
+//        WordSynonymCodePart();//语料库编码
+//        System.out.println("语料库编码化 耗时：" + (System.currentTimeMillis() - time) + "ms");
 
-        long time = System.currentTimeMillis();
-        WordSynonymCodePart();//语料库编码
-        System.out.println("语料库编码化 耗时：" + (System.currentTimeMillis() - time) + "ms");
-
-
+        questions.InitByDataBase();
+        //corpus.InitByDataBase();
         String Answer = FindClosestQuestion();
         return Answer;
 
     }
+
+    public void OnceCoding()throws  Exception{
+        this.Init();//先初始化
+        WordPerprocessingPart();
+        long time = System.currentTimeMillis();
+        WordSynonymCodePart();//语料库编码
+        System.out.println("语料库编码化 耗时：" + (System.currentTimeMillis() - time) + "ms");
+        corpus.addCodeToDB(corpus.getDircCode());
+    }//TODO 这个方法进行对问题库编码并写入数据库
+
 
     private String FindClosestQuestion(){
         Vector<WordCode> Question = corpus.getDircCode().get(corpus.getDirc().size()-1);

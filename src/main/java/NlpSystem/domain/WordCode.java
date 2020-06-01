@@ -95,6 +95,8 @@ public class WordCode {
         stringBuilder.append(WordGroup);
         stringBuilder.append(SingleGroup);
         stringBuilder.append(Code);
+
+        stringBuilder.append("," + InitWord);
         return  stringBuilder.toString();
     }
 

@@ -10,7 +10,8 @@ public class MainServer {
         NlpModel nlpModel =new NlpModel();
         String answer="";
         try{
-            nlpModel.Init();
+            //TODO 这里不用Init了
+            //nlpModel.Init();
             answer=nlpModel.getAnswers(question);
         }catch (Exception e){e.printStackTrace();}
         if(answer.isEmpty())
