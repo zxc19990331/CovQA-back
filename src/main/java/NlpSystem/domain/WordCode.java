@@ -91,9 +91,17 @@ public class WordCode {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(TopLevel);
         stringBuilder.append(MiddleLevel);
-        stringBuilder.append(SmallLevel);
+        if(SmallLevel<10){
+            stringBuilder.append("0" + SmallLevel);
+        }else {
+            stringBuilder.append(SmallLevel);
+        }
         stringBuilder.append(WordGroup);
-        stringBuilder.append(SingleGroup);
+        if(SmallLevel<10){
+            stringBuilder.append("0" + SingleGroup);
+        }else {
+            stringBuilder.append(SingleGroup);
+        }
         stringBuilder.append(Code);
 
         stringBuilder.append("," + InitWord);
