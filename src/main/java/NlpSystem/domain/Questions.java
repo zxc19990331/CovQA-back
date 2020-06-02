@@ -11,13 +11,14 @@ import dao.JDBCDAO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
 public class Questions {
     private Vector<String> questions = new Vector<String>();
 
-    private Map<String,String> questionAndAnswer = new HashMap<>();
+    private Map<String,String> questionAndAnswer = new LinkedHashMap<>();
     public void Init(){
         questions.add("我经常熬夜，睡得很晚，没事吧");
         questions.add("新冠肺炎是什么东东？");

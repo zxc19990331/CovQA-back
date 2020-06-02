@@ -5,10 +5,7 @@ import NlpSystem.domain.WordCode;
 import com.sun.org.apache.regexp.internal.RE;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created by hi on 2020/5/19.
@@ -49,12 +46,12 @@ public class JDBCDAO {
     }
     //获取问题和答案
     public static Map<String ,String> getQuestionAndAnswer(){
-        Map<String,String> questionAndAnswer=new HashMap<>();
+        Map<String,String> questionAndAnswer=new LinkedHashMap<>();
         String querySql="SELECT * FROM qa";
         try{
             ResultSet resultSet=statement.executeQuery(querySql);
             while(resultSet.next()){
-                questionAndAnswer.put(resultSet.getString("question"),resultSet.getString("answer"));
+                questionAndAnswer.put(resultSet.getString("question").replace(" ",""),resultSet.getString("answer").replace(" ",""));
             }
         }catch (Exception e){System.out.println("查询异常2:"+e);}
         return questionAndAnswer;

@@ -50,7 +50,7 @@ public class NlpModel {
         stopWord.Init();//读取停用词典
         synonymCode.init();//读取同义词词典
       //questions.Init();;//初始化问题，Init中内置了7句问题
-        questions.InitByDataBase();
+//        questions.InitByDataBase();
         //questions.InitByFile(this.getClass().getClassLoader().getResource("qa2.xlsx").getPath());
 
     }//初始化NLP模块：分词器+去停词器+问题库
@@ -78,12 +78,12 @@ public class NlpModel {
 //
 //        }
 //        System.out.println("语料库编码化 耗时：" + (System.currentTimeMillis() - time) + "ms");
-//
-//        questions.InitByDataBase();
+
         //corpus.InitByDataBase();
+        this.Init();
         corpus.InitByDB();
         questions.InitByDataBase();
-        String Answer = FindClosestQuestion();
+        String Answer = FindClosestQuestion(Q);
         return Answer;
 
     }
@@ -98,23 +98,26 @@ public class NlpModel {
     }//TODO 这个方法进行对问题库编码并写入数据库
 
 
-    private String FindClosestQuestion(){
-        Vector<WordCode> Question = corpus.getDircCode().get(corpus.getDirc().size()-1);
-        for(String s:corpus.getDirc().get(corpus.getDirc().size()-1)){
+    private String FindClosestQuestion(String Q){
+        Vector<String> QVector = segment.BMM_FMMSegment(Q);
+        QVector = stopWord.RemoveOneLine(QVector);
+        Vector<WordCode> Question = new Vector<>();
+        for(String s: QVector){
+            Question.add(synonymCode.getWordCode(s));
+        }
+
+        for(String s:QVector){
             System.out.print(s + " ");
         }
-        for(WordCode s:corpus.getDircCode().get(corpus.getDirc().size()-1)){
+        for(WordCode s:Question){
             System.out.print(s.toString() + " ");
         }
         String Answer = null;
 
         double MaxScore = -1;
         int MaxIter = -1;
-        for(int i = 0;i<corpus.getDircCode().size()-1;i++){
+        for(int i = 0;i<corpus.getDircCode().size();i++){
             System.out.print("正在计算相似度" + i +"：" + corpus.getDirc().get(i));
-            if(i == 32){
-              //  System.out.print("nb!");
-            }
             double score = synonymCode.CalcDistance(Question,corpus.getDircCode().get(i));
             System.out.println("***" + score);
             if(score > MaxScore){

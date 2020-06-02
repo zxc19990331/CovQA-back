@@ -35,7 +35,7 @@ public class Corpus {
             for(String ss:arr){
                 String []arr2=ss.split(",");
                 WordCode wordCode=new WordCode(arr2[0]);
-                wordCode.setInitWord(arr2[0]);
+                wordCode.setInitWord(arr2[1]);
                 wordCodes.add(wordCode);
                 question.add(arr2[1]);
             }
@@ -115,7 +115,7 @@ public class Corpus {
                 String temp=dircCode.get(i).get(j).toString()+" ";
                 code+=temp;
             }
-            JDBCDAO.addCode(code,i);
+            JDBCDAO.addCode(code,i+1);
         }
     }
 }

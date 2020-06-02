@@ -84,10 +84,13 @@ public class WordCode {
                 }
             }
         }
+        if(this.getInitWord().equals(B.getInitWord())){
+                return  15.5;
+        }
         return score;
     }
 
-    public String toString(){
+  /*  public String toString(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(TopLevel);
         stringBuilder.append(MiddleLevel);
@@ -98,7 +101,26 @@ public class WordCode {
 
         stringBuilder.append("," + InitWord);
         return  stringBuilder.toString();
-    }
+    }*/
+  public String toString(){
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append(TopLevel);
+      stringBuilder.append(MiddleLevel);
+      if(SmallLevel<10){
+          stringBuilder.append("0" + SmallLevel);
+      }else {
+          stringBuilder.append(SmallLevel);
+      }
+      stringBuilder.append(WordGroup);
+      if(SingleGroup<10){
+          stringBuilder.append("0" + SingleGroup);
+      }else {
+          stringBuilder.append(SingleGroup);
+      }
+      stringBuilder.append(Code);
 
+      stringBuilder.append("," + InitWord);
+      return  stringBuilder.toString();
+  }
 
 }

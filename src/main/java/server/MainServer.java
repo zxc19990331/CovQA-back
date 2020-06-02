@@ -11,7 +11,7 @@ public class MainServer {
         String answer="";
         try{
             //TODO 这里不用Init了
-            //nlpModel.Init();
+           // nlpModel.Init();
             answer=nlpModel.getAnswers(question);
         }catch (Exception e){e.printStackTrace();}
         if(answer.isEmpty())
