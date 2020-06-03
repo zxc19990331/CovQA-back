@@ -2,6 +2,7 @@ package dao;
 
 import NlpSystem.domain.Corpus;
 import NlpSystem.domain.WordCode;
+import SpiderUtils.Spider;
 import com.sun.org.apache.regexp.internal.RE;
 
 import java.sql.*;
@@ -83,5 +84,21 @@ public class JDBCDAO {
             }
         }catch (Exception e){System.out.print("查询异常3："+e);}
         return code;
+    }
+    //自动更新数据库
+    public static void addQAToAutoUpdateDB(String code,String question,String answer){
+        String insertSql="INSERT IGNORE INTO qa(code,question,answer) VALUES(\""+code+"\",\""+question+"\",\""+answer+"\")";
+        try{
+            statement.executeUpdate(insertSql);
+        }catch (Exception e){System.out.print("更新异常3："+e);}
+    }
+    //insertDate的每个元素code、question、answer
+    public static void autoUpdateDB(ArrayList<ArrayList<String>>insertDate){
+        for(ArrayList<String> temp:insertDate){
+            String code=temp.get(0);
+            String question=temp.get(1);
+            String answer=temp.get(2);
+            addQAToAutoUpdateDB(code,question,answer);
+        }
     }
 }
