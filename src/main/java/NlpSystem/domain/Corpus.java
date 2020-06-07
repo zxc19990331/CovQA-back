@@ -28,6 +28,9 @@ public class Corpus {
         //从数据库中一行行读出：【Bj3A1=,新型冠状病毒】【 Hi8C3=,肆虐】【 Di1A1=,全球】
         Vector<String>code=JDBCDAO.getCode();
         for(int i=0;i<code.size();i++){
+            if(i == 147){
+                System.out.print("!!!");
+            }
             String temp=code.get(i);
             String []arr=temp.split("\\s+");
             Vector<WordCode> wordCodes=new Vector<>();

@@ -9,6 +9,8 @@ import PreprocessingUtils.StopWord;
 import PreprocessingUtils.SynonymCode;
 
 import java.io.File;
+import java.sql.Struct;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class NlpModel {
@@ -63,7 +65,15 @@ public class NlpModel {
         corpus.ShowDircCode();
     }//展示语料库
 
-
+    public ArrayList<String> getStringCode(String question){
+        Vector<String> QVector = segment.BMM_FMMSegment(question);
+        QVector = stopWord.RemoveOneLine(QVector);
+        ArrayList<String> Question = new ArrayList<>();
+        for(String s: QVector){
+            Question.add(synonymCode.getWordCode(s).toString());
+        }
+        return Question;
+    }
 
     public String getAnswers(String Q)throws Exception{
 //        questions.addQuestion(Q);//问题融入问题库

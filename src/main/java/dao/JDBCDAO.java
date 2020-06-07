@@ -59,7 +59,7 @@ public class JDBCDAO {
     }
     //写入问题和答案
     public static boolean addQuestionAndAnswer(String question,String answer){
-        String insertSql="INSERT INTO qa VALUES(\""+question+"\",\""+answer+"\")";
+        String insertSql="INSERT IGNORE INTO qa(question,answer) VALUES(\""+question+"\",\""+answer+"\")";
         try{
             statement.executeUpdate(insertSql);
             return true;

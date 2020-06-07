@@ -20,6 +20,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
+import server.MainServer;
 
 /**
  * Created by hi on 2020/6/2.
@@ -66,7 +68,7 @@ public class Spider {
         ArrayList<String>temp=new ArrayList<>();
         CloseableHttpClient httpClient=HttpClients.createDefault();
         CloseableHttpResponse response=null;
-        //悟空问答，搜索新冠肺炎url
+        //搜狗问问，搜索新冠肺炎url
         HttpGet request=new HttpGet(url);
         request.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML,like Gecko) Chrome/74.0.3729.169 Safari/537.36");
         try{
@@ -78,7 +80,7 @@ public class Spider {
                 Document document=Jsoup.parse(html);
                 Element title=document.getElementById("question_title");
                 //System.out.print(title.text());
-                temp.add(title.text());
+                temp.add(title.text().replaceAll("[^\\u4E00-\\u9FA5]",""));
                 Elements preTag=document.getElementsByTag("pre");
                 //System.out.print(preTag.get(0).text());
                 temp.add(preTag.get(0).text().replaceAll("[\\u25c6~\\u25c7]|[\\——]|[\\▲]|[\\△]]",""));
@@ -103,17 +105,18 @@ public class Spider {
             questionAndAnswer.add(getQuestionAndAnswer(href));
         }
     }
-    public static void main(String[] args){
-      int maxPage=3;
+  public static void main(String[] args){
+      /*int maxPage=3;
         spiderQuestionAndAnswer(maxPage);
         for(ArrayList<String>temp:questionAndAnswer){
             for(String qa:temp){
                 System.out.println(qa);
             }
             System.out.println();
-        }
+        }*/
+        //MainServer.updateDB();
         //正则表达式字符处理测试
-        /*String temp="为阴性达到出院标准】,,,,▲◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇——————————";
-        System.out.print(temp.replaceAll("[\\u25c6~\\u25c7]|[\\——]|[\\▲]",""));*/
-    }
+        String temp="为阴性达到出院标准】,,,,▲◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇——————————";
+        System.out.print(temp.replaceAll("[^\\u4E00-\\u9FA5]",""));
+   }
 }
